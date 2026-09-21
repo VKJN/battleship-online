@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   allow_unauthenticated_access only: [ :new, :create ]
+  skip_before_action :verify_authenticity_token, only: [:create]
 
   def new
     @user = User.new
@@ -9,7 +10,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      start_new_session_for_user(@user)
+      session = @user.sessions.create!
+      cookies.signed.permanent[:session_id] = session.id
+      
       redirect_to root_path, notice: "Вы успешно зарегистрировались!"
     else
       render :new, status: :unprocessable_entity

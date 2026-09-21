@@ -1,11 +1,20 @@
-<p style="color: red;"><%= flash[:alert] %></p>
-<p style="color: green;"><%= flash[:notice] %></p>
+<h2>Войти в игру</h2>
 
-<%= form_with url: session_path do |form| %>
-    <%= form.text_field :nickname, required: true, autofocus: true, autocomplete: "username", placeholder: "Введите ваш никнейм", value: params[:nickname] %><br>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %><br>
-  <%= form.submit "Sign in" %>
-<% end %>
+<form action="/session" method="post">
+  <div>
+    <label for="nickname">Введите ваш никнейм</label><br>
+    <input type="text" name="nickname" id="nickname" required autofocus value="<%= params[:nickname] %>">
+  </div>
+  <br>
+  <div>
+    <label for="password">Пароль</label><br>
+    <input type="password" name="password" id="password" required>
+  </div>
+  <br>
+  <div>
+    <button type="submit">Войти</button>
+  </div>
+</form>
+
 <br>
-
-<%= link_to "Forgot password?", new_password_path %>
+<p>Впервые тут? <a href="/register">Создать новый аккаунт</a></p>
