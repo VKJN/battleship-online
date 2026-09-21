@@ -1,5 +1,5 @@
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-<%= tag.div(flash[:notice], style: "color:green") if flash[:notice] %>
+<p style="color: red;"><%= flash[:alert] %></p>
+<p style="color: green;"><%= flash[:notice] %></p>
 
 <%= form_with url: session_path do |form| %>
     <%= form.text_field :nickname, required: true, autofocus: true, autocomplete: "username", placeholder: "Введите ваш никнейм", value: params[:nickname] %><br>
