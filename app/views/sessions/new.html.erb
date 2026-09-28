@@ -1,20 +1,21 @@
-<h2>Войти в игру</h2>
+<div class="auth-container">
+  <h2>Войти в игру</h2>
 
-<form action="/session" method="post">
-  <div>
-    <label for="nickname">Введите ваш никнейм</label><br>
-    <input type="text" name="nickname" id="nickname" required autofocus value="<%= params[:nickname] %>">
-  </div>
-  <br>
-  <div>
-    <label for="password">Пароль</label><br>
-    <input type="password" name="password" id="password" required>
-  </div>
-  <br>
-  <div>
-    <button type="submit">Войти</button>
-  </div>
-</form>
+  <form action="/session" method="post">
+    <div class="form-group">
+      <label for="nickname">Ваш никнейм</label>
+      <input type="text" name="nickname" id="nickname" required autofocus>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Пароль</label>
+      <input type="password" name="password" id="password" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Войти</button>
+  </form>
 
-<br>
-<p>Впервые тут? <a href="/register">Создать новый аккаунт</a></p>
+  <p class="auth-switch-text">
+    Впервые тут? <a href="/register">Создать новый аккаунт</a>
+  </p>
+</div>

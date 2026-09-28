@@ -1,0 +1,48 @@
+<div class="main-container">
+  <header class="game-header">
+    <h1 class="game-title">⚓ МОРСКОЙ БОЙ ⚓</h1>
+    <p class="game-subtitle">Онлайн-стратегия на Ruby on Rails</p>
+  </header>
+
+  <main class="game-content">
+    <% if @current_user %>
+      <!-- Экран для авторизованного игрока -->
+      <div class="profile-card">
+        <h2 class="welcome-text">Добро пожаловать на борт, <span class="nickname"><%= @current_user.nickname %></span>!</h2>
+        
+        <div class="stats-box">
+          <p>📊 Ваша статистика (Заглушка):</p>
+          <ul>
+            <li>Побед: <span class="stat-win">0</span></li>
+            <li>Поражений: <span class="stat-lose">0</span></li>
+            <li>Рейтинг: <span class="stat-rating">1000</span></li>
+          </ul>
+        </div>
+
+        <div class="action-zone">
+          <button class="btn btn-primary btn-large">🚀 НАЙТИ СОПЕРНИКА</button>
+        </div>
+
+        <div class="logout-zone">
+          <form action="/session" method="post">
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" class="btn btn-danger">Выйти из рубки</button>
+          </form>
+        </div>
+      </div>
+
+    <% else %>
+      <!-- Экран для гостя -->
+      <div class="guest-card">
+        <p class="intro-text">
+          Готовы принять командование флотом? Авторизуйтесь, чтобы начать сражение с реальными игроками по сети.
+        </p>
+        
+        <div class="auth-buttons">
+          <a href="/session/new" class="btn btn-primary">Войти в аккаунт</a>
+          <a href="/register" class="btn btn-secondary">Регистрация игрока</a>
+        </div>
+      </div>
+    <% end %>
+  </main>
+</div>

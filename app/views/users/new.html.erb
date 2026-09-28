@@ -1,35 +1,38 @@
-<h2>Регистрация нового игрока</h2>
+<div class="auth-container">
+  <h2>Регистрация игрока</h2>
 
-<% if @user.errors.any? %>
-  <div style="color: red;">
-    <h4>Ошибки при регистрации:</h4>
-    <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+  <form action="/register" method="post" id="registration-form">
+    <div class="form-group">
+      <label for="user_nickname">Придумайте никнейм</label>
+      <input type="text" name="user[nickname]" id="user_nickname" required autofocus>
+    </div>
+    
+    <div class="form-group">
+      <label for="user_password">Пароль (минимум 6 символов)</label>
+      <input type="password" name="user[password]" id="user_password" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="user_password_confirmation">Повторите пароль</label>
+      <input type="password" name="user[password_confirmation]" id="user_password_confirmation" required>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Создать аккаунт</button>
+  </form>
 
-<form action="/register" method="post">
-  <div>
-    <label for="user_nickname">Придумайте никнейм</label><br>
-    <input type="text" name="user[nickname]" id="user_nickname" required autofocus>
-  </div>
-  <br>
-  <div>
-    <label for="user_password">Пароль</label><br>
-    <input type="password" name="user[password]" id="user_password" required>
-  </div>
-  <br>
-  <div>
-    <label for="user_password_confirmation">Повторите пароль</label><br>
-    <input type="password" name="user[password_confirmation]" id="user_password_confirmation" required>
-  </div>
-  <br>
-  <div>
-    <button type="submit">Создать аккаунт</button>
-  </div>
-</form>
-<br>
-<p>Уже есть аккаунт? <a href="/session/new">Войти в игру</a></p>
+  <p class="auth-switch-text">
+    Уже есть аккаунт? <a href="/session/new">Войти в игру</a>
+  </p>
+</div>
+
+<script>
+  document.getElementById('registration-form').addEventListener('submit', function(event) {
+    var password = document.getElementById('user_password').value;
+    var confirmPassword = document.getElementById('user_password_confirmation').value;
+
+    if (password !== confirmPassword) {
+      event.preventDefault(); // Останавливаем отправку формы на сервер, если пароли разные
+      alert('Ошибка: Пароли не совпадают! Пожалуйста, проверьте ввод.');
+    }
+  });
+</script>
