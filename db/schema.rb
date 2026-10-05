@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_21_180349) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_05_102229) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "games", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "player_one_id"
+    t.integer "player_two_id"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.integer "winner_id"
+  end
+
+  create_table "moves", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "game_id"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.integer "x"
+    t.integer "y"
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -21,6 +40,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_21_180349) do
     t.string "user_agent"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "ships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "game_id"
+    t.boolean "horizontal"
+    t.integer "size"
+    t.integer "start_x"
+    t.integer "start_y"
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
   end
 
   create_table "users", force: :cascade do |t|

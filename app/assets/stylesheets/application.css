@@ -171,8 +171,7 @@ body {
 .auth-switch-text a:hover {
   text-decoration: underline;
 }
-
-/* Сетка игрового поля 11х11 (10 клеток + 1 под координаты) */
+/* */
 .sea-battle-grid {
   display: grid;
   grid-template-columns: 30px repeat(10, 35px);
@@ -185,7 +184,6 @@ body {
   box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
 }
 
-/* Координатные плашки */
 .coord {
   display: flex;
   justify-content: center;
@@ -195,7 +193,6 @@ body {
   font-weight: bold;
 }
 
-/* Базовая клетка поля */
 .game-cell {
   background-color: rgba(0, 240, 255, 0.03);
   border: 1px solid rgba(0, 240, 255, 0.2);
@@ -207,14 +204,12 @@ body {
   cursor: pointer;
 }
 
-/* Вид корабля: целая секция */
 .cell-ship-part, .cell-ship-single {
   background-color: #334155;
   border-color: #38bdf8;
   box-shadow: inset 0 0 5px rgba(56, 189, 248, 0.3);
 }
 
-/* Точка промаха (всплеск воды) */
 .cell-miss-dot {
   position: relative;
 }
@@ -231,7 +226,6 @@ body {
   box-shadow: 0 0 5px #38bdf8;
 }
 
-/* Спрайт «Взорванной» секции (Попадание / Ранен) */
 .cell-ship-damaged {
   background-color: rgba(249, 115, 22, 0.2);
   border-color: #f97316;
@@ -251,7 +245,6 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* Спрайт полностью уничтоженной секции (Убит) */
 .cell-ship-sink {
   background-color: rgba(239, 68, 68, 0.2);
   border-color: #ef4444;
