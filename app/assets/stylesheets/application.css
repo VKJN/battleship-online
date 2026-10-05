@@ -171,3 +171,96 @@ body {
 .auth-switch-text a:hover {
   text-decoration: underline;
 }
+
+/* Сетка игрового поля 11х11 (10 клеток + 1 под координаты) */
+.sea-battle-grid {
+  display: grid;
+  grid-template-columns: 30px repeat(10, 35px);
+  grid-template-rows: 30px repeat(10, 35px);
+  gap: 3px;
+  background-color: #0b1d33;
+  padding: 12px;
+  border: 2px solid #00f0ff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+}
+
+/* Координатные плашки */
+.coord {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #00f0ff;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* Базовая клетка поля */
+.game-cell {
+  background-color: rgba(0, 240, 255, 0.03);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+.game-cell:hover {
+  background-color: rgba(0, 240, 255, 0.15);
+  cursor: pointer;
+}
+
+/* Вид корабля: целая секция */
+.cell-ship-part, .cell-ship-single {
+  background-color: #334155;
+  border-color: #38bdf8;
+  box-shadow: inset 0 0 5px rgba(56, 189, 248, 0.3);
+}
+
+/* Точка промаха (всплеск воды) */
+.cell-miss-dot {
+  position: relative;
+}
+.cell-miss-dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background-color: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #38bdf8;
+}
+
+/* Спрайт «Взорванной» секции (Попадание / Ранен) */
+.cell-ship-damaged {
+  background-color: rgba(249, 115, 22, 0.2);
+  border-color: #f97316;
+  position: relative;
+}
+.cell-ship-damaged::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle, #f97316 10%, transparent 60%);
+}
+.cell-ship-damaged::before {
+  content: "💥";
+  position: absolute;
+  font-size: 1.1rem;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Спрайт полностью уничтоженной секции (Убит) */
+.cell-ship-sink {
+  background-color: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  position: relative;
+}
+.cell-ship-sink::before {
+  content: "🔥";
+  position: absolute;
+  font-size: 1.1rem;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}

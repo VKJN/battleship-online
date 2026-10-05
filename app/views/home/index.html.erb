@@ -45,4 +45,60 @@
       </div>
     <% end %>
   </main>
+
+  <section class="ui-kit-battlefield" style="margin-top: 50px; border-top: 1px dashed #334155; padding-top: 30px;">
+    <h3 style="color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.4); margin-bottom: 5px;">🎮 ИГРОВОЙ UI KIT (БОЕВОЕ ПОЛЕ)</h3>
+    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px;">Прототип сетки 10х10, виды кораблей и спрайты попаданий</p>
+    
+    <div class="battlefield-demo-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; align-items: flex-start;">
+      
+      <!-- Боевое поле 10х10 -->
+      <div class="grid-wrapper">
+        <h4 style="margin-bottom: 15px; color: #fff;">Морской квадрат 10 × 10</h4>
+        <div class="sea-battle-grid">
+          <!-- Буквенная строка координат -->
+          <div class="coord"></div><div class="coord">А</div><div class="coord">Б</div><div class="coord">В</div><div class="coord">Г</div><div class="coord">Д</div><div class="coord">Е</div><div class="coord">Ж</div><div class="coord">З</div><div class="coord">И</div><div class="coord">К</div>
+          
+          <div class="coord">1</div><div class="game-cell"></div><div class="game-cell cell-ship-part"></div><div class="game-cell cell-ship-part"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell cell-miss-dot"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">2</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell cell-ship-single"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">3</div><div class="game-cell cell-ship-damaged"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">4</div><div class="game-cell cell-ship-sink"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">5</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">6</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">7</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">8</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">9</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+          <div class="coord">10</div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div><div class="game-cell"></div>
+        </div>
+      </div>
+
+      <div class="kit-specifications" style="text-align: left; max-width: 300px;">
+        <h4 style="margin-bottom: 15px; color: #fff; text-align: center;">Виды кораблей и секций</h4>
+        
+        <div style="margin-bottom: 15px;">
+          <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8;">1. Однопалубный катер (1 клетка):</p>
+          <div class="game-cell cell-ship-single" style="width: 35px; height: 35px;"></div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8;">2. Двухпалубный эсминец (Секции корабля):</p>
+          <div style="display: flex; gap: 2px;">
+            <div class="game-cell cell-ship-part" style="width: 35px; height: 35px;"></div>
+            <div class="game-cell cell-ship-part" style="width: 35px; height: 35px;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8;">3. Спрайт "Взорванной" секции (Ранен):</p>
+          <div class="game-cell cell-ship-damaged" style="width: 35px; height: 35px;"></div>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <p style="margin: 0 0 5px 0; font-size: 0.85rem; color: #94a3b8;">4. Уничтоженный корабль (Убит):</p>
+          <div class="game-cell cell-ship-sink" style="width: 35px; height: 35px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 </div>
