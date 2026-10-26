@@ -1,7 +1,7 @@
 <div class="main-container" style="max-width: 800px;">
   <header class="game-header">
     <h1 class="game-title">⚔️ ИДЁТ СРАЖЕНИЕ ⚔️</h1>
-    <p class="game-subtitle">Игра #<%= @game.id %> | Капитан: <span class="nickname"><%= @current_user.nickname %></span></p>
+    <p class="game-subtitle">Игра #<%= @game.id %> | Капитан: <span class="nickname"><%= @current_user&.nickname || "Гость" %></span></p>
   </header>
 
   <main class="game-content" style="display: flex; flex-direction: column; align-items: center; gap: 30px;">
