@@ -27,13 +27,13 @@
             
             <% if existing_move %>
               <!-- Если выстрел уже был, рисуем закрашенную клетку с его статусом -->
-              <div class="game-cell <%= existing_move.status %>" style="cursor: default;"></div>
+              <div id="cell-<%= x %>-<%= y %>" class="game-cell <%= existing_move.status %>" style="cursor: default;"></div>
             <% else %>
               <!-- Если выстрела не было, клетка является кнопкой-формой для выстрела -->
-              <form action="<%= game_moves_path(@game) %>" method="post" style="margin: 0; padding: 0; display: block; width: 100%; height: 100%;">
+              <form action="<%= game_moves_path(@game) %>" method="post" data-turbo="true" style="margin: 0; padding: 0; display: block; width: 100%; height: 100%;">
                 <input type="hidden" name="x" value="<%= x %>">
                 <input type="hidden" name="y" value="<%= y %>">
-                <button type="submit" class="game-cell" style="width: 100%; height: 100%; padding: 0; margin: 0; background: transparent; display: block; box-sizing: border-box;"></button>
+                <button type="submit" id="cell-<%= x %>-<%= y %>" class="game-cell" style="width: 100%; height: 100%; padding: 0; margin: 0; background: transparent; display: block; box-sizing: border-box;"></button>
               </form>
             <% end %>
           <% end %>
