@@ -9,7 +9,7 @@ class Move < ApplicationRecord
   private
 
   def cell_not_attacked_yet
-    if Move.exists?(game_id: game_id, x: x, y: y)
+    if Move.exists?(game_id: game_id, user_id: user_id, x: x, y: y)
       errors.add(:base, "В эту клетку уже стреляли")
     end
   end

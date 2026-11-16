@@ -1,48 +1,96 @@
-<div class="main-container" style="max-width: 800px;">
+<div class="main-container" style="max-width: 1100px;">
   <header class="game-header">
-    <h1 class="game-title">⚔️ ИДЁТ СРАЖЕНИЕ ⚔️</h1>
-    <p class="game-subtitle">Игра #<%= @game.id %> | Капитан: <span class="nickname"><%= @current_user&.nickname || "Гость" %></span></p>
+    <h1 class="game-title">⚔️ МОРСКОЙ БОЙ: PVP ⚔️</h1>
+    <p class="game-subtitle">Комната #<%= @game.id %> | Капитан: <span class="nickname"><%= @current_user&.nickname || "Гость" %></span></p>
   </header>
 
-  <main class="game-content" style="display: flex; flex-direction: column; align-items: center; gap: 30px;">
+  <main class="game-content" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
     
-    <div class="grid-wrapper">
-      <h4 style="margin-bottom: 15px; color: #fff; text-align: center;">🔥 Квадрат ведения огня (Поле соперника) 🔥</h4>
-      <p style="color: #94a3b8; font-size: 0.85rem; text-align: center; margin-top: -10px; margin-bottom: 20px;">Нажмите на любую клетку, чтобы произвести выстрел</p>
+    <% if @game.status == "waiting" %>
+      <!-- Блок приглашения второго игрока -->
+      <div class="profile-card" style="width: 100%; max-width: 500px; border-color: #ffb700;">
+        <h3 style="color: #ffb700; margin-top: 0;">⏳ Ожидание соперника...</h3>
+        <p style="font-size: 0.9rem; color: #e2e8f0;">Отправьте эту ссылку второму игроку (откройте в режиме Инкогнито под другим аккаунтом):</p>
+        <input type="text" readonly value="<%= join_game_url(@game) %>" style="width: 100%; padding: 10px; background: #0b1d33; border: 1px solid #00f0ff; color: #00f0ff; border-radius: 6px; text-align: center; font-weight: bold; box-sizing: border-box;">
+        <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0; margin-top: 10px;">После того как соперник перейдёт по ссылке, обновите эту страницу (F5).</p>
+      </div>
+    <% else %>
+      <!-- Индикатор очереди хода -->
+      <% if @game.current_turn_user_id == @current_user&.id %>
+        <div id="turn-indicator" style="color: #00ff88; font-weight: bold; font-size: 1.1rem;">🎯 ВАШ ХОД! Выберите клетку для выстрела</div>
+      <% else %>
+        <div id="turn-indicator" style="color: #ffb700; font-weight: bold; font-size: 1.1rem;">⏳ Ход соперника! Нажмите F5, когда он походит</div>
+      <% end %>
+    <% end %>
+
+    
+    <!-- Контейнер для двух полей рядом -->
+    <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; align-items: flex-start; width: 100%;">
       
-      <div class="sea-battle-grid">
-        <!-- Буквенная строка координат -->
-        <div class="coord"></div>
-        <% ["А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "К"].each do |letter| %>
-          <div class="coord"><%= letter %></div>
-        <% end %>
+      <!-- 1. ЛЕВОЕ ПОЛЕ: ВАШ ФЛОТ (Свои корабли + выстрелы соперника по вам) -->
+      <div class="grid-wrapper">
+        <h4 style="margin-bottom: 15px; color: #38bdf8; text-align: center;">🛡️ Ваш флот (Ваше поле) 🛡️</h4>
         
-        <!-- Генерируем сетку 10х10 через циклы Ruby -->
-        <% (1..10).each do |y| %>
-          <div class="coord"><%= y %></div> <!-- Номер ряда в начале строки -->
+        <div class="sea-battle-grid">
+          <div class="coord"></div>
+          <% ["А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "К"].each do |letter| %>
+            <div class="coord"><%= letter %></div>
+          <% end %>
           
-          <% (1..10).each do |x| %>
-            <% # Проверяем, стрелял ли уже игрок в эту клетку в текущем матче %>
-            <% existing_move = @moves.find { |m| m.x == x && m.y == y } %>
-            
-            <% if existing_move %>
-              <!-- Если выстрел уже был, рисуем закрашенную клетку с его статусом -->
-              <div id="cell-<%= x %>-<%= y %>" class="game-cell <%= existing_move.status %>" style="cursor: default;"></div>
-            <% else %>
-              <!-- Если выстрела не было, клетка является кнопкой-формой для выстрела -->
-              <form action="<%= game_moves_path(@game) %>" method="post" data-turbo="true" style="margin: 0; padding: 0; display: block; width: 100%; height: 100%;">
-                <input type="hidden" name="x" value="<%= x %>">
-                <input type="hidden" name="y" value="<%= y %>">
-                <button type="submit" id="cell-<%= x %>-<%= y %>" class="game-cell" style="width: 100%; height: 100%; padding: 0; margin: 0; background: transparent; display: block; box-sizing: border-box;"></button>
-              </form>
+          <% (1..10).each do |y| %>
+            <div class="coord"><%= y %></div>
+            <% (1..10).each do |x| %>
+              <%# Ищем выстрелы, которые сделал СОПЕРНИК (его user_id не равен нашему) %>
+              <% enemy_move = @moves.find { |m| m.user_id != @current_user&.id && m.x == x && m.y == y } %>
+              <% has_ship = @my_ships.include?([x, y]) %>
+
+              <% if enemy_move %>
+                <div class="game-cell <%= enemy_move.status %>" style="width: 100%; height: 100%; cursor: default;"></div>
+              <% elsif has_ship %>
+                <div class="game-cell cell-ship-part" style="width: 100%; height: 100%; cursor: default;"></div>
+              <% else %>
+                <div class="game-cell" style="width: 100%; height: 100%; cursor: default;"></div>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
+        </div>
+      </div>
+
+      <!-- 2. ПРАВОЕ ПОЛЕ: РАДАР АТАКИ (Поле соперника для кликов) -->
+      <div class="grid-wrapper">
+        <h4 style="margin-bottom: 15px; color: #fff; text-align: center;">🔥 Радар атаки (Поле соперника) 🔥</h4>
+        
+        <div class="sea-battle-grid">
+          <div class="coord"></div>
+          <% ["А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "К"].each do |letter| %>
+            <div class="coord"><%= letter %></div>
+          <% end %>
+          
+          <% (1..10).each do |y| %>
+            <div class="coord"><%= y %></div>
+            
+            <% (1..10).each do |x| %>
+              <% existing_move = @moves.find { |m| m.user_id == @current_user&.id && m.x == x && m.y == y } %>
+              
+              <% if existing_move %>
+                <div id="cell-<%= x %>-<%= y %>" class="game-cell <%= existing_move.status %>" style="width: 100%; height: 100%; cursor: default;"></div>
+              <% elsif @game.status == "active" && @game.current_turn_user_id == @current_user&.id %>
+                <form action="<%= game_moves_path(@game) %>" method="post" data-turbo="true" style="margin: 0; padding: 0; display: block; width: 100%; height: 100%;">
+                  <input type="hidden" name="x" value="<%= x %>">
+                  <input type="hidden" name="y" value="<%= y %>">
+                  <button type="submit" id="cell-<%= x %>-<%= y %>" class="game-cell" style="width: 100%; height: 100%; padding: 0; margin: 0; background: transparent; display: block; box-sizing: border-box;"></button>
+                </form>
+              <% else %>
+                <div class="game-cell" style="width: 100%; height: 100%; opacity: 0.5; cursor: not-allowed;"></div>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
       </div>
     </div>
 
     <div style="margin-top: 10px;">
-      <a href="/" class="btn btn-secondary">🚪 Вернуться в штаб (На главную)</a>
+      <a href="/" class="btn btn-secondary">🚪 Вернуться в штаб</a>
     </div>
 
   </main>

@@ -6,8 +6,11 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
 
   get "up" => "rails/health#show", as: :rails_health_check
-
+  
   resources :games, only: [:create, :show] do
+    member do
+      get :join
+    end
     resources :moves, only: [:create]
   end
 
