@@ -22,20 +22,18 @@ class MovesController < ApplicationController
     )
 
     if @move.save
-      @game.update!(current_turn_user_id: opponent_id)
+      # Если попал — ход остаётся у стрелявшего, если промахнулся — переходит сопернику
+      next_turn_id = (result_status == "cell-ship-damaged") ? current_user_id : opponent_id
+      @game.update!(current_turn_user_id: next_turn_id)
+      current_user = User.find(current_user_id)
 
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.replace(
-              "cell-#{x_coord}-#{y_coord}",
-              helpers.content_tag(:div, "", id: "cell-#{x_coord}-#{y_coord}", class: "game-cell #{result_status}", style: "width: 100%; height: 100%; cursor: default;")
-            ),
-            turbo_stream.replace(
-              "turn-indicator",
-              helpers.content_tag(:div, "⏳ Ход соперника! Нажмите F5, когда он походит", id: "turn-indicator", style: "color: #ffb700; font-weight: bold; font-size: 1.1rem;")
-            )
-          ]
+          render turbo_stream: turbo_stream.replace(
+            "game_board_user_#{current_user_id}",
+            partial: "games/board",
+            locals: { game: @game, current_user: current_user }
+          )
         end
         format.html { redirect_to game_path(@game) }
       end

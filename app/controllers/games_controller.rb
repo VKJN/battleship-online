@@ -19,8 +19,8 @@ class GamesController < ApplicationController
 
     if current_user_id > 0 && @game.player_one_id != current_user_id && @game.player_two_id.nil?
       @game.update!(player_two_id: current_user_id, status: "active")
-      # Расставляем случайный флот для второго игрока
       @game.generate_fleet_for(current_user_id)
+      @game.broadcast_boards
     end
 
     redirect_to game_path(@game)

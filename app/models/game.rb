@@ -2,9 +2,23 @@ class Game < ApplicationRecord
   has_many :ships, dependent: :destroy
   has_many :moves, dependent: :destroy
 
-  # Случайная расстановка 4 кораблей (размерами 4, 3, 2, 1) для конкретного игрока
+  # Отправляет обновлённую доску обоим игрокам по веб-сокетам без F5
+  def broadcast_boards
+    [player_one_id, player_two_id].compact.each do |uid|
+      user = User.find_by(id: uid)
+      next unless user
+
+      broadcast_replace_to(
+        self,
+        target: "game_board_user_#{uid}",
+        partial: "games/board",
+        locals: { game: self, current_user: user }
+      )
+    end
+  end
+
   def generate_fleet_for(user_id)
-    occupied_cells = [] # Занятые клетки и буферная зона вокруг них
+    occupied_cells = []
 
     [4, 3, 2, 1].each do |ship_size|
       loop do
@@ -15,12 +29,10 @@ class Game < ApplicationRecord
         start_x = rand(1..max_x)
         start_y = rand(1..max_y)
 
-        # Собираем все клетки нового корабля
         new_ship_cells = (0...ship_size).map do |i|
           horizontal ? [start_x + i, start_y] : [start_x, start_y + i]
         end
 
-        # Проверяем, не пересекается ли новый корабль с уже занятыми клетками и их окружением
         if (new_ship_cells & occupied_cells).empty?
           ships.create!(
             user_id: user_id,
@@ -30,7 +42,6 @@ class Game < ApplicationRecord
             horizontal: horizontal
           )
 
-          # Добавляем сам корабль и все соседние клетки (включая диагонали) в список занятых
           new_ship_cells.each do |cx, cy|
             (-1..1).each do |dx|
               (-1..1).each do |dy|
@@ -45,7 +56,6 @@ class Game < ApplicationRecord
     end
   end
 
-  # Вспомогательный метод: возвращает массив всех координат [x, y] кораблей игрока
   def fleet_coordinates_for(user_id)
     ships.where(user_id: user_id).flat_map do |ship|
       (0...ship.size).map do |i|

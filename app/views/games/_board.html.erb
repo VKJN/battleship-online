@@ -1,0 +1,82 @@
+<div id="game_board_user_<%= current_user&.id %>" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+  <% my_ships = current_user ? game.fleet_coordinates_for(current_user.id) : [] %>
+  <% moves = game.moves.reload %>
+
+  <% if game.status == "waiting" %>
+    <div class="profile-card" style="width: 100%; max-width: 500px; border-color: #ffb700;">
+      <h3 style="color: #ffb700; margin-top: 0;">⏳ Ожидание соперника...</h3>
+      <p style="font-size: 0.9rem; color: #e2e8f0;">Отправьте эту ссылку второму игроку (откройте в режиме Инкогнито под другим аккаунтом):</p>
+      <input type="text" readonly value="<%= join_game_url(game) %>" style="width: 100%; padding: 10px; background: #0b1d33; border: 1px solid #00f0ff; color: #00f0ff; border-radius: 6px; text-align: center; font-weight: bold; box-sizing: border-box;">
+      <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0; margin-top: 10px;">Как только соперник перейдёт по ссылке, игра начнётся автоматически!</p>
+    </div>
+  <% else %>
+    <% if game.current_turn_user_id == current_user&.id %>
+      <div style="color: #00ff88; font-weight: bold; font-size: 1.1rem;">🎯 ВАШ ХОД! Выберите клетку для выстрела</div>
+    <% else %>
+      <div style="color: #ffb700; font-weight: bold; font-size: 1.1rem;">⏳ Ход соперника... Ожидайте выстрела</div>
+    <% end %>
+  <% end %>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; align-items: flex-start; width: 100%;">
+    
+    <!-- 1. ЛЕВОЕ ПОЛЕ: ВАШ ФЛОТ -->
+    <div class="grid-wrapper">
+      <h4 style="margin-bottom: 15px; color: #38bdf8; text-align: center;">🛡️ Ваш флот (Ваше поле) 🛡️</h4>
+      
+      <div class="sea-battle-grid">
+        <div class="coord"></div>
+        <% ["А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "К"].each do |letter| %>
+          <div class="coord"><%= letter %></div>
+        <% end %>
+        
+        <% (1..10).each do |y| %>
+          <div class="coord"><%= y %></div>
+          <% (1..10).each do |x| %>
+            <% enemy_move = moves.find { |m| m.user_id != current_user&.id && m.x == x && m.y == y } %>
+            <% has_ship = my_ships.include?([x, y]) %>
+
+            <% if enemy_move %>
+              <div class="game-cell <%= enemy_move.status %>" style="width: 100%; height: 100%; cursor: default;"></div>
+            <% elsif has_ship %>
+              <div class="game-cell cell-ship-part" style="width: 100%; height: 100%; cursor: default;"></div>
+            <% else %>
+              <div class="game-cell" style="width: 100%; height: 100%; cursor: default;"></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- 2. ПРАВОЕ ПОЛЕ: РАДАР АТАКИ -->
+    <div class="grid-wrapper">
+      <h4 style="margin-bottom: 15px; color: #fff; text-align: center;">🔥 Радар атаки (Поле соперника) 🔥</h4>
+      
+      <div class="sea-battle-grid">
+        <div class="coord"></div>
+        <% ["А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "К"].each do |letter| %>
+          <div class="coord"><%= letter %></div>
+        <% end %>
+        
+        <% (1..10).each do |y| %>
+          <div class="coord"><%= y %></div>
+          
+          <% (1..10).each do |x| %>
+            <% existing_move = moves.find { |m| m.user_id == current_user&.id && m.x == x && m.y == y } %>
+            
+            <% if existing_move %>
+              <div id="cell-<%= x %>-<%= y %>" class="game-cell <%= existing_move.status %>" style="width: 100%; height: 100%; cursor: default;"></div>
+            <% elsif game.status == "active" && game.current_turn_user_id == current_user&.id %>
+              <form action="<%= game_moves_path(game) %>" method="post" data-turbo="true" style="margin: 0; padding: 0; display: block; width: 100%; height: 100%;">
+                <input type="hidden" name="x" value="<%= x %>">
+                <input type="hidden" name="y" value="<%= y %>">
+                <button type="submit" id="cell-<%= x %>-<%= y %>" class="game-cell" style="width: 100%; height: 100%; padding: 0; margin: 0; background: transparent; display: block; box-sizing: border-box;"></button>
+              </form>
+            <% else %>
+              <div class="game-cell" style="width: 100%; height: 100%; opacity: 0.5; cursor: not-allowed;"></div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
